@@ -12,10 +12,10 @@ class BasePage:
     def __init__(self, driver: WebDriver = None):
         if driver is None:
             options = Options()
-            options.debugger_address = '127.0.0.1:9222'
+            options.debugger_address = "127.0.0.1:9222"
             self._driver = webdriver.Chrome(options=options)
-            # self._driver.get('https://work.weixin.qq.com/wework_admin/frame')
-            self._driver.implicitly_wait(10)
+            self._driver.implicitly_wait(3)
+
         else:
             self._driver = driver
 
@@ -25,5 +25,11 @@ class BasePage:
     def find(self, by, locator):
         return self._driver.find_element(by, locator)
 
-    def wait_for(self, locator, times=10):
-        WebDriverWait(self._driver, times).until(expected_conditions.element_to_be_clickable(locator))
+    def finds(self, by, locator):
+        return self._driver.find_elements(by, locator)
+
+    def wait_for_click(self, locator, time=10):
+        WebDriverWait(self._driver, time).until(expected_conditions.element_to_be_clickable(locator))
+
+    def wait_for_elem(self, conditions, time=10):
+        WebDriverWait(self._driver, time).until(conditions)
