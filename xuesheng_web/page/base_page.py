@@ -1,18 +1,34 @@
 import inspect
 import json
-import yaml
-from appium.webdriver import WebElement
-from appium.webdriver.webdriver import WebDriver
 
-from appium_xueqiu.page.wrapper import handle_black
+import yaml
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.wait import WebDriverWait
+
+from xuesheng_web.page.wrapper import handle_black
 
 
 class BasePage:
-    _params = {}
+    _driver = None
+    _base_url = ""
+    _params={}
 
     def __init__(self, driver: WebDriver = None):
-        self._driver = driver
+        if driver is None:
+            options = Options()
+            options.debugger_address = "127.0.0.1:9222"
+            self._driver = webdriver.Chrome()
+            self._driver.implicitly_wait(10)
 
+        else:
+            self._driver = driver
+
+        if self._base_url != "":
+            self._driver.get(self._base_url)
     def set_implicitly(self, time):
         self._driver.implicitly_wait(time)
 
@@ -45,6 +61,7 @@ class BasePage:
             element_text = self._driver.find_element(locator, value).text
         return element_text
 
+
     def steps(self, path):
         with open(path, encoding="utf-8") as f:
             name = inspect.stack()[1].function
@@ -58,7 +75,7 @@ class BasePage:
                 action = step["action"]
                 if "click" == action:
                     self.find(step["by"], step["locator"]).click()
-                if "send" == action:
+                if "send_keys" == action:
                     self.find(step["by"], step["locator"]).send_keys(step["value"])
                 if "len > 0" == action:
                     eles = self.finds(step["by"], step["locator"])

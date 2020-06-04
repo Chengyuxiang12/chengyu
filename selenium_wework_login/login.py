@@ -15,4 +15,5 @@ class Login:
         # click register
         self._driver.find_element(By.CSS_SELECTOR, '.login_registerBar_link').click()
 
+
         return Register(self._driver)
