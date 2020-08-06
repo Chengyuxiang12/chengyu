@@ -15,6 +15,5 @@ class TestLogin():
     @pytest.mark.parametrize(("a", "b"), yaml.safe_load(open("./zhanghao.yaml", encoding="utf-8")))
     def testlogin(self, a, b):
         dl=self.main.login(a, b)
-        sleep(5)
 
-        dl.add_hdong().quit()
+        dl.add_hdong().add()
